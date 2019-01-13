@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import DebtsView from '@/components/DebtsView'
+import DebtsView from '../components/DebtsView'
 
 Vue.use(Router)
 
