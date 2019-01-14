@@ -1,12 +1,18 @@
 <template>
   <div class="debts-view__main">
-    <div class="debts-view__debts-list" v-if="debts !== null" v-for="debt in debts" :key="debt.id">
+    <div class="debts-view__add-new-debt">
+      <button class="debts-view__btn" @click="open" v-if="!extendModal">Add new debt</button>
+      <button class="debts-view__btn" @click="open" v-else>Close</button>
+    </div>
+    <new-debt v-if="extendModal"/>
+    <div
+      class="debts-view__debts-list"
+      v-if="debts !== null"
+      v-for="debt in debts"
+      :key="debt.id">
       <debt :debtData='debt'/>
     </div>
-    <div class="debts-view__add-new-debt" v-on:click="addNew = !addNew" v-if="!addNew"><p>+</p></div>
-    <div v-if="addNew">
-      <new-debt/>
-    </div>
+
   </div>
 </template>
 
@@ -20,12 +26,17 @@ export default {
   data () {
     return {
       debts: null,
-      addNew: false
+      extendModal: false
+    }
+  },
+  methods: {
+    open () {
+      this.extendModal = !this.extendModal
     }
   },
   mounted () {
     axios.get('http://localhost:3000/debts').then(response => {
-      this.debts = response.data
+      this.debts = response.data.reverse()
     }).catch(err => {
       console.log(err)
     })
@@ -34,38 +45,17 @@ export default {
 </script>
 
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.debts-view__main {
-  margin-bottom: 110px;
-}
-.debts-view__add-new-debt {
-  bottom: 20px;
-  right: 10px;
-  margin: 0;
-  position: fixed;
-  font-size: 5em;
-  font-weight: 800;
-  color: red;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: white;
-  box-shadow: inset 0 0 15px lightgray;
-}
-.debts-view__add-new-debt p {
-  margin: 0;
-}
+  .debts-view__debts-list {
+    margin: 0 15px;
+  }
+  .debts-view__add-new-debt {
+    background-color: #999;
+    width: 100%;
+    padding: 15px 0;
+  }
+  .debts-view__btn {
+   padding: 15px;
+   border: none;
+   border-radius: 15px;
+ }
 </style>
