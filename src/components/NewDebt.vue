@@ -18,12 +18,11 @@
       <button
         class="new-debt__btn-submit"
         :disabled="!(this.title && this.amount > 0 && this.who)"
-        @click="submitnewdebt">Submit</button>
+        @click="$emit('submitNewDebt', $data)">Submit</button>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data () {
     return {
@@ -32,24 +31,6 @@ export default {
       who: null
     }
   },
-  methods: {
-    reload () {
-      this.$router.go(0)
-    },
-    submitnewdebt () {
-      axios.post('http://localhost:3000/debts', {
-        'title': this.title,
-        'amount': this.amount,
-        'who': this.who
-      }).then(function (response) {
-        return response
-      })
-        .catch(function (error) {
-          console.log(error)
-        })
-      this.reload()
-    }
-  }
 }
 </script>
 

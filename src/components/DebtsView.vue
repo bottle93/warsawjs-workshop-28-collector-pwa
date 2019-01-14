@@ -4,7 +4,7 @@
       <button class="debts-view__btn" @click="open" v-if="!extendModal">Add new debt</button>
       <button class="debts-view__btn" @click="open" v-else>Close</button>
     </div>
-    <new-debt v-if="extendModal"/>
+    <new-debt v-if="extendModal" @submitNewDebt="submitNewDebt"/>
     <div
       class="debts-view__debts-list"
       v-if="debts !== null"
@@ -32,14 +32,24 @@ export default {
   methods: {
     open () {
       this.extendModal = !this.extendModal
+    },
+    loadDebts () {
+      axios.get('http://localhost:3000/debts').then(response => {
+        this.debts = response.data.reverse()
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    submitNewDebt (debtData) {
+      axios.post('http://localhost:3000/debts', debtData)
+        .then(this.loadDebts)
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
   mounted () {
-    axios.get('http://localhost:3000/debts').then(response => {
-      this.debts = response.data.reverse()
-    }).catch(err => {
-      console.log(err)
-    })
+    this.loadDebts()
   }
 }
 </script>
